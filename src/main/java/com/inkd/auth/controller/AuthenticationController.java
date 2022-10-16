@@ -41,12 +41,6 @@ public class AuthenticationController {
       return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
     }
 
-    @PutMapping("updated")
-    public ResponseEntity<?> updateUser(@RequestBody User user)
-    {
-     return null;
-    }
-
     @DeleteMapping("deleted")
     public ResponseEntity<?> deleteUser(@RequestBody User user)
     {
