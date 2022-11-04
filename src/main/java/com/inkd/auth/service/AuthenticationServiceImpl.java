@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         User signInUser = userPrinciple.getUser();
         signInUser.setAccessToken(jwt);
-        signInUser.setRefreshToken(jwtRefreshTokenService.createRefreshToken(signInUser.getId()).getTokenId());
+        signInUser.setRefreshToken(jwtRefreshTokenService.createRefreshToken(signInUser.getArtistId()).getTokenId());
 
         return signInUser;
     }

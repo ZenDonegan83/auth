@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long artistId;
 
     @Column(name="username", unique = true, nullable = false, length = 50)
     private String username;
@@ -27,6 +27,10 @@ public class User {
     @Column(name="email", unique = true, nullable = false, length = 50)
     private String email;
 
+    @Lob
+    @Column(name="profile_pic")
+    private byte[] profile_pic;
+
     @Column(name="create_time",nullable = false)
     private LocalDateTime createTime;
 
@@ -37,19 +41,16 @@ public class User {
     @Transient
     private String accessToken;
 
-
-
-
-
     @Transient
     private String refreshToken;
 
-    public Long getId() {
-        return id;
+
+    public Long getArtistId() {
+        return artistId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setArtistId(Long artistId) {
+        this.artistId = artistId;
     }
 
     public String getUsername() {
@@ -90,6 +91,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public byte[] getProfile_pic() {
+        return profile_pic;
+    }
+
+    public void setProfile_pic(byte[] profile_pic) {
+        this.profile_pic = profile_pic;
     }
 
     public LocalDateTime getCreateTime() {

@@ -10,7 +10,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long customerId;
 
     @Column(name="first_name", nullable = false, length = 50)
     private String firstName;
@@ -25,12 +25,15 @@ public class Customer {
     private LocalDateTime createTime;
 
 
-    public Long getId() {
-        return id;
+
+
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getFirstName() {

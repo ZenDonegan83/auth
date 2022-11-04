@@ -59,7 +59,7 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
         User user = userRepository.findById(jwtRefreshToken.getUserId()).orElseThrow();
 
         UserPrinciple userPrinciple = UserPrinciple.builder()
-                .id(user.getId())
+                .id(user.getArtistId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(Set.of(SecurityUtils.convertToAuthority(user.getRole().name())))
