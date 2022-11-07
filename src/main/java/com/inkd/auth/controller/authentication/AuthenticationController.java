@@ -5,7 +5,6 @@ import com.inkd.auth.constants.AppsConstants;
 import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.common.ResponseDTO;
 import com.inkd.auth.model.domain.user.User;
-import com.inkd.auth.model.dto.authentication.RefreshTokenRQ;
 import com.inkd.auth.model.dto.user.UserDTO;
 import com.inkd.auth.model.dto.user.UserSignInRQ;
 import com.inkd.auth.service.authentication.AuthenticationService;
@@ -75,12 +74,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("refresh-token")
-    public ResponseEntity<ResponseDTO<UserDTO>> refreshToken(@RequestBody RefreshTokenRQ tokenRQ) {
+    public ResponseEntity<ResponseDTO<UserDTO>> refreshToken(@RequestParam String token) {
         ResponseDTO<UserDTO> response = new ResponseDTO<>();
         HttpStatus httpStatus;
 
         try {
-            UserDTO signedUserDTO = jwtRefreshTokenService.generateAccessTokenFromRefreshToken(tokenRQ.getToken());
+            UserDTO signedUserDTO = jwtRefreshTokenService.generateAccessTokenFromRefreshToken(token);
 
             response.setResult(signedUserDTO);
             response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
