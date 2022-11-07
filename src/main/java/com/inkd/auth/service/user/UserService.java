@@ -4,6 +4,7 @@ import com.inkd.auth.constants.AppsConstants;
 import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.model.dto.user.UserDTO;
+import com.inkd.auth.model.dto.user.UserForgetPasswordRQ;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface UserService {
     boolean existsById(Long userID) throws AppsException;
 
     User findUserByID(Long userID) throws AppsException;
+
+    void forgetPassword(UserForgetPasswordRQ forgetPasswordRQ) throws AppsException;
 }

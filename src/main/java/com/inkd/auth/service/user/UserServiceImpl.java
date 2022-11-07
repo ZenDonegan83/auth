@@ -4,7 +4,9 @@ import com.inkd.auth.constants.AppsConstants;
 import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.model.dto.user.UserDTO;
+import com.inkd.auth.model.dto.user.UserForgetPasswordRQ;
 import com.inkd.auth.repository.user.UserRepository;
+import com.inkd.auth.utils.PasswordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -133,6 +135,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByID(Long userID) throws AppsException {
         return userRepository.getById(userID);
+    }
+
+    @Override
+    public void forgetPassword(UserForgetPasswordRQ forgetPasswordRQ) throws AppsException {
+        if (StringUtils.isEmpty(forgetPasswordRQ.getEmail())) {
+            throw new AppsException("Email is not valid");
+        }
+
+        User user = userRepository.findByEmailIgnoreCase(forgetPasswordRQ.getEmail());
+
+        if (user == null) {
+            throw new AppsException("User can't find for email");
+        } else {
+            String plainPassword = PasswordUtils.generateRandomPlainPassword(5);
+            user.setPassword(passwordEncoder.encode(plainPassword));
+
+            user = userRepository.saveAndFlush(user);
+
+            UserDTO userDTO = new UserDTO(user);
+
+            // FIXME: 11/7/2022 Remove this sout after testing
+            System.out.println(plainPassword);
+
+            // TODO: 11/7/2022  Send email to user
+        }
     }
 
     private void validateUserDTO(UserDTO userDTO, boolean isNew) throws AppsException {

@@ -5,6 +5,7 @@ import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.common.ResponseDTO;
 import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.model.dto.user.UserDTO;
+import com.inkd.auth.model.dto.user.UserForgetPasswordRQ;
 import com.inkd.auth.model.dto.user.UserSignInRQ;
 import com.inkd.auth.service.authentication.AuthenticationService;
 import com.inkd.auth.service.authentication.JwtRefreshTokenService;
@@ -127,6 +128,26 @@ public class AuthenticationController {
             response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
             httpStatus = HttpStatus.CREATED;
 
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PostMapping("forgetPassword")
+    public ResponseEntity<ResponseDTO<String>> forgetPassword(@RequestBody UserForgetPasswordRQ forgetPasswordRQ) {
+        ResponseDTO<String> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            userService.forgetPassword(forgetPasswordRQ);
+
+            response.setResult("SUCCESS");
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
         } catch (AppsException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
