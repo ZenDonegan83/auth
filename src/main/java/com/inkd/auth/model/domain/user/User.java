@@ -1,9 +1,12 @@
 package com.inkd.auth.model.domain.user;
 
 import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.model.domain.event.Event;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -38,8 +41,12 @@ public class User {
     @Column(name = "PROFILE_PIC")
     private byte[] profilePic;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE", nullable = false)
     private Date createDate;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "user")
+    private Set<Event> events;
 
     public Long getArtistID() {
         return artistID;
@@ -111,5 +118,16 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Set<Event> getEvents() {
+        if (events == null) {
+            events = new HashSet<>();
+        }
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
     }
 }

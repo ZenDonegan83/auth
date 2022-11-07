@@ -21,4 +21,10 @@ public interface UserService {
     List<UserDTO> findAllUsers() throws AppsException;
 
     UserDTO updateUser(Long userID, UserDTO updateUserDTO) throws AppsException;
+
+    UserDTO findByID(Long userID) throws AppsException;
+
+    boolean existsById(Long userID) throws AppsException;
+
+    User findUserByID(Long userID) throws AppsException;
 }

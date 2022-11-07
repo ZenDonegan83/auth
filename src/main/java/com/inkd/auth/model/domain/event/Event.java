@@ -1,44 +1,136 @@
 package com.inkd.auth.model.domain.event;
 
+import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.model.domain.customer.Customer;
+import com.inkd.auth.model.domain.user.User;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eventId;
+    @Column(name = "EVENT_ID")
+    private Long eventID;
 
-    @Column(name = "cost")
-    private float cost;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ARTIST_ID")
+    private User user;
 
-    @Column(name = "tattoo_location", nullable = false, length = 50)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
+
+    @Column(name = "START_TIME", nullable = false)
+    private String startTime;
+
+    @Column(name = "END_TIME", nullable = false)
+    private String endTime;
+
+    @Column(name = "COST")
+    private BigDecimal cost;
+
+    @Lob
+    @Column(name = "IMAGES")
+    private byte[] images;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "START_DATE")
+    private Date startDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "END_DATE")
+    private Date endDate;
+
+    @Column(name = "TATTOO_LOCATION", nullable = false, length = 50)
     private String tattooLocation;
 
-    @Column(name = "comments", length = 1200)
+    @Column(name = "COMMENTS", length = 1200)
     private String comments;
 
-    @Column(name = "cancelled")
-    private boolean cancelled;
+    @Column(name = "CANCELLED")
+    private AppsConstants.YesNo cancelled;
 
-    @Column(name = "no_show")
-    private boolean noShow;
+    @Column(name = "NO_SHOW")
+    private AppsConstants.YesNo noShow;
 
-    public Long getEventId() {
-        return eventId;
+    @Column(name = "RESCHEDULE")
+    private String reschedule;
+
+    public Long getEventID() {
+        return eventID;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setEventID(Long eventID) {
+        this.eventID = eventID;
     }
 
-    public float getCost() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public byte[] getImages() {
+        return images;
+    }
+
+    public void setImages(byte[] images) {
+        this.images = images;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getTattooLocation() {
@@ -57,19 +149,27 @@ public class Event {
         this.comments = comments;
     }
 
-    public boolean isCancelled() {
+    public AppsConstants.YesNo getCancelled() {
         return cancelled;
     }
 
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled(AppsConstants.YesNo cancelled) {
         this.cancelled = cancelled;
     }
 
-    public boolean isNoShow() {
+    public AppsConstants.YesNo getNoShow() {
         return noShow;
     }
 
-    public void setNoShow(boolean noShow) {
+    public void setNoShow(AppsConstants.YesNo noShow) {
         this.noShow = noShow;
+    }
+
+    public String getReschedule() {
+        return reschedule;
+    }
+
+    public void setReschedule(String reschedule) {
+        this.reschedule = reschedule;
     }
 }

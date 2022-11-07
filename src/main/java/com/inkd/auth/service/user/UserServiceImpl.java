@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new AppsException("User ID is not valid");
         }
 
-        if (!userRepository.existsById(userID)) {
+        if (!this.existsById(userID)) {
             throw new AppsException("User is not found");
         } else {
             User user = userRepository.getById(userID);
@@ -108,6 +108,31 @@ public class UserServiceImpl implements UserService {
 
             return new UserDTO(user);
         }
+    }
+
+    @Override
+    public UserDTO findByID(Long userID) throws AppsException {
+        if (userID == null) {
+            throw new AppsException("User ID is not valid");
+        }
+
+        if (!this.existsById(userID)) {
+            throw new AppsException("User is not found");
+        } else {
+            User customer = userRepository.getById(userID);
+
+            return new UserDTO(customer);
+        }
+    }
+
+    @Override
+    public boolean existsById(Long userID) throws AppsException {
+        return userRepository.existsById(userID);
+    }
+
+    @Override
+    public User findUserByID(Long userID) throws AppsException {
+        return userRepository.getById(userID);
     }
 
     private void validateUserDTO(UserDTO userDTO, boolean isNew) throws AppsException {

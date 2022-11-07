@@ -1,8 +1,12 @@
 package com.inkd.auth.model.domain.customer;
 
 
+import com.inkd.auth.model.domain.event.Event;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
@@ -31,6 +35,9 @@ public class Customer {
 
     @Column(name = "CREATED_DATE", nullable = false)
     private Date createDate;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "customer")
+    private Set<Event> events;
 
     public Long getCustomerID() {
         return customerID;
@@ -86,5 +93,16 @@ public class Customer {
 
     public void setProfilePic(byte[] profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public Set<Event> getEvents() {
+        if (events == null) {
+            events = new HashSet<>();
+        }
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
     }
 }

@@ -83,7 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new AppsException("Customer ID is not valid");
         }
 
-        if (!customerRepository.existsById(customerID)) {
+        if (!this.existsById(customerID)) {
             throw new AppsException("Customer is not found");
         } else {
             Customer customer = customerRepository.getById(customerID);
@@ -118,12 +118,22 @@ public class CustomerServiceImpl implements CustomerService {
             throw new AppsException("Customer ID is not valid");
         }
 
-        if (!customerRepository.existsById(customerID)) {
+        if (!this.existsById(customerID)) {
             throw new AppsException("Customer is not found");
         } else {
             Customer customer = customerRepository.getById(customerID);
 
             return new CustomerDTO(customer);
         }
+    }
+
+    @Override
+    public boolean existsById(Long customerID) throws AppsException {
+        return customerRepository.existsById(customerID);
+    }
+
+    @Override
+    public Customer findCustomerByID(Long customerID) throws AppsException {
+        return customerRepository.getById(customerID);
     }
 }

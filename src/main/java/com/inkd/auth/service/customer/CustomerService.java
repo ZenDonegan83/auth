@@ -1,6 +1,7 @@
 package com.inkd.auth.service.customer;
 
 import com.inkd.auth.exception.AppsException;
+import com.inkd.auth.model.domain.customer.Customer;
 import com.inkd.auth.model.dto.customer.CustomerDTO;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +17,8 @@ public interface CustomerService {
     CustomerDTO updateCustomer(Long customerID, CustomerDTO updateCustomerDTO) throws AppsException;
 
     CustomerDTO findByID(Long customerID) throws AppsException;
+
+    boolean existsById(Long customerID) throws AppsException;
+
+    Customer findCustomerByID(Long customerID) throws AppsException;
 }
