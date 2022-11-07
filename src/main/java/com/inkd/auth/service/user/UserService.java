@@ -18,5 +18,7 @@ public interface UserService {
 
     void changeRole(AppsConstants.Role newRole, String username);
 
-    List<User> findAllUsers();
+    List<UserDTO> findAllUsers() throws AppsException;
+
+    UserDTO updateUser(Long userID, UserDTO updateUserDTO) throws AppsException;
 }

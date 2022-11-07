@@ -5,6 +5,7 @@ import com.inkd.auth.security.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -38,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/api/users/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/sign-in").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/refresh-token").permitAll()
                 .antMatchers("/api/admin/**").hasRole(AppsConstants.Role.ADMIN.name())
                 .anyRequest().authenticated();
 

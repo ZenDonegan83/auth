@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/users")
 public class AuthenticationController {
@@ -83,6 +85,48 @@ public class AuthenticationController {
             response.setResult(signedUserDTO);
             response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
             httpStatus = HttpStatus.OK;
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @GetMapping(value = "/allUsers", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<List<UserDTO>>> getAllUsers() {
+        ResponseDTO<List<UserDTO>> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            List<UserDTO> allProducts = this.userService.findAllUsers();
+
+            response.setResult(allProducts);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PutMapping("/updateUser/{userID}")
+    public ResponseEntity<ResponseDTO<UserDTO>> updateUser(@PathVariable Long userID, @RequestBody UserDTO updateUserDTO) {
+        ResponseDTO<UserDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            UserDTO userDTO = this.userService.updateUser(userID, updateUserDTO);
+
+            response.setResult(userDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.CREATED;
+
         } catch (AppsException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         //Validate User DTO
-        this.validateUserDTO(userDTO);
+        this.validateUserDTO(userDTO, true);
 
         user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstName());
@@ -62,25 +63,70 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
+    public List<UserDTO> findAllUsers() throws AppsException {
+        List<User> userList = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
 
-    private void validateUserDTO(UserDTO userDTO) throws AppsException {
-        if (StringUtils.isEmpty(userDTO.getUsername())) {
-            throw new AppsException("User name is not valid");
+        for (User user : userList) {
+            userDTOList.add(new UserDTO(user));
         }
 
-        if (this.userRepository.findByUsernameIgnoreCase(userDTO.getUsername()) != null) {
-            throw new AppsException("User name already exist");
+        return userDTOList;
+    }
+
+    @Override
+    public UserDTO updateUser(Long userID, UserDTO updateUserDTO) throws AppsException {
+        if (userID == null) {
+            throw new AppsException("User ID is not valid");
+        }
+
+        if (!userRepository.existsById(userID)) {
+            throw new AppsException("User is not found");
+        } else {
+            User user = userRepository.getById(userID);
+
+            //Validate User DTO
+            this.validateUserDTO(updateUserDTO, false);
+
+            if (!user.getUsername().equalsIgnoreCase(updateUserDTO.getUsername())
+                    && this.userRepository.findByUsernameIgnoreCase(updateUserDTO.getUsername()) != null) {
+                throw new AppsException("Username is already exist");
+            }
+            if (!user.getEmail().equalsIgnoreCase(updateUserDTO.getEmail())
+                    && this.userRepository.findByEmailIgnoreCase(updateUserDTO.getEmail()) != null) {
+                throw new AppsException("Email is already exist");
+            }
+
+            user.setUsername(updateUserDTO.getUsername());
+            user.setFirstName(updateUserDTO.getFirstName());
+            user.setLastName(updateUserDTO.getLastName());
+            user.setEmail(updateUserDTO.getEmail());
+            user.setProfilePic(updateUserDTO.getProfilePic());
+            user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
+
+            user = this.userRepository.saveAndFlush(user);
+
+            return new UserDTO(user);
+        }
+    }
+
+    private void validateUserDTO(UserDTO userDTO, boolean isNew) throws AppsException {
+        if (StringUtils.isEmpty(userDTO.getUsername())) {
+            throw new AppsException("User name is not valid");
         }
 
         if (StringUtils.isEmpty(userDTO.getEmail())) {
             throw new AppsException("Email is not valid");
         }
 
-        if (this.userRepository.findByEmailIgnoreCase(userDTO.getEmail()) != null) {
-            throw new AppsException("Email already exist");
+        if (isNew) {
+            if (this.userRepository.findByUsernameIgnoreCase(userDTO.getUsername()) != null) {
+                throw new AppsException("User name already exist");
+            }
+
+            if (this.userRepository.findByEmailIgnoreCase(userDTO.getEmail()) != null) {
+                throw new AppsException("Email already exist");
+            }
         }
 
         if (StringUtils.isEmpty(userDTO.getFirstName())) {
