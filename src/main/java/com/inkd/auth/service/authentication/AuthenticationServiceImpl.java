@@ -1,7 +1,10 @@
 package com.inkd.auth.service.authentication;
 
 
+import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.domain.user.User;
+import com.inkd.auth.model.dto.user.UserDTO;
+import com.inkd.auth.model.dto.user.UserSignInRQ;
 import com.inkd.auth.security.UserPrinciple;
 import com.inkd.auth.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -23,10 +26,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private JwtRefreshTokenService jwtRefreshTokenService;
 
     @Override
-    public User signInAndReturnJWT(User signInRequest)
-    {
+    public UserDTO signInAndReturnJWT(UserSignInRQ signInRQ) throws AppsException {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(signInRQ.getUsername(), signInRQ.getPassword())
         );
 
         UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
@@ -34,9 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         User signInUser = userPrinciple.getUser();
 
-        signInUser.setAccessToken(jwt);
-        signInUser.setRefreshToken(jwtRefreshTokenService.createRefreshToken(signInUser.getArtistId()).getTokenId());
+        UserDTO signInUserDTO = new UserDTO(signInUser);
 
-        return signInUser;
+        signInUserDTO.setAccessToken(jwt);
+        signInUserDTO.setRefreshToken(jwtRefreshTokenService.createRefreshToken(signInUser.getArtistID()).getTokenID());
+
+        return signInUserDTO;
     }
 }

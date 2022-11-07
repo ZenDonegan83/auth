@@ -3,7 +3,7 @@ package com.inkd.auth.model.domain.user;
 import com.inkd.auth.constants.AppsConstants;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Entity
@@ -12,54 +12,41 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long artistId;
+    @Column(name = "ARTIST_ID")
+    private Long artistID;
 
-    @Column(name = "username", unique = true, nullable = false, length = 50)
-    private String username;
-
-    @Column(name = "first_name", nullable = false, length = 50)
+    @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    @Column(name = "LAST_NAME", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "USER_NAME", unique = true, nullable = false, length = 50)
+    private String username;
 
-    @Column(name = "email", unique = true, nullable = false, length = 50)
+    @Column(name = "EMAIL", unique = true, nullable = false, length = 50)
     private String email;
 
-    @Lob
-    @Column(name = "profile_pic")
-    private byte[] profile_pic;
-
-    @Column(name = "create_time", nullable = false)
-    private LocalDateTime createTime;
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 50)
+    @Column(name = "ROLE", nullable = false, length = 50)
     private AppsConstants.Role role;
 
-    @Transient
-    private String accessToken;
+    @Lob
+    @Column(name = "PROFILE_PIC")
+    private byte[] profilePic;
 
-    @Transient
-    private String refreshToken;
+    @Column(name = "CREATED_DATE", nullable = false)
+    private Date createDate;
 
-    public Long getArtistId() {
-        return artistId;
+    public Long getArtistID() {
+        return artistID;
     }
 
-    public void setArtistId(Long artistId) {
-        this.artistId = artistId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setArtistID(Long artistID) {
+        this.artistID = artistID;
     }
 
     public String getFirstName() {
@@ -78,12 +65,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -94,20 +81,12 @@ public class User {
         this.email = email;
     }
 
-    public byte[] getProfile_pic() {
-        return profile_pic;
+    public String getPassword() {
+        return password;
     }
 
-    public void setProfile_pic(byte[] profile_pic) {
-        this.profile_pic = profile_pic;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public AppsConstants.Role getRole() {
@@ -118,19 +97,19 @@ public class User {
         this.role = role;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public byte[] getProfilePic() {
+        return profilePic;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setProfilePic(byte[] profilePic) {
+        this.profilePic = profilePic;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

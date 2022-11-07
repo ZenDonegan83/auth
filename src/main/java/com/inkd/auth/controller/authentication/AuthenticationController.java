@@ -1,7 +1,13 @@
 package com.inkd.auth.controller.authentication;
 
 
+import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.exception.AppsException;
+import com.inkd.auth.model.common.ResponseDTO;
 import com.inkd.auth.model.domain.user.User;
+import com.inkd.auth.model.dto.authentication.RefreshTokenRQ;
+import com.inkd.auth.model.dto.user.UserDTO;
+import com.inkd.auth.model.dto.user.UserSignInRQ;
 import com.inkd.auth.service.authentication.AuthenticationService;
 import com.inkd.auth.service.authentication.JwtRefreshTokenService;
 import com.inkd.auth.service.user.UserService;
@@ -24,16 +30,43 @@ public class AuthenticationController {
     private JwtRefreshTokenService jwtRefreshTokenService;
 
     @PostMapping("sign-up")
-    public ResponseEntity<?> signUp(@RequestBody User user) {
-        if (userService.findByUsername(user.getUsername()).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    public ResponseEntity<ResponseDTO<UserDTO>> signUp(@RequestBody UserDTO userDTO) {
+        ResponseDTO<UserDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            UserDTO savedUserDTO = userService.saveUser(userDTO);
+
+            response.setResult(savedUserDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.CREATED;
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
         }
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<?> signIn(@RequestBody User user) {
-        return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO<UserDTO>> signIn(@RequestBody UserSignInRQ signInRQ) {
+        ResponseDTO<UserDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            UserDTO signedUserDTO = authenticationService.signInAndReturnJWT(signInRQ);
+
+            response.setResult(signedUserDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @DeleteMapping("deleted")
@@ -42,7 +75,22 @@ public class AuthenticationController {
     }
 
     @PostMapping("refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestParam String token) {
-        return ResponseEntity.ok(jwtRefreshTokenService.generateAccessTokenFromRefreshToken(token));
+    public ResponseEntity<ResponseDTO<UserDTO>> refreshToken(@RequestBody RefreshTokenRQ tokenRQ) {
+        ResponseDTO<UserDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            UserDTO signedUserDTO = jwtRefreshTokenService.generateAccessTokenFromRefreshToken(tokenRQ.getToken());
+
+            response.setResult(signedUserDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

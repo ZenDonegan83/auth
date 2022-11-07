@@ -1,7 +1,9 @@
 package com.inkd.auth.service.authentication;
 
+import com.inkd.auth.exception.AppsException;
 import com.inkd.auth.model.domain.authentication.JwtRefreshToken;
 import com.inkd.auth.model.domain.user.User;
+import com.inkd.auth.model.dto.user.UserDTO;
 import com.inkd.auth.repository.authentication.JwtRefreshTokenRepository;
 import com.inkd.auth.repository.user.UserRepository;
 import com.inkd.auth.security.UserPrinciple;
@@ -35,27 +37,26 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     public JwtRefreshToken createRefreshToken(Long userId) {
         JwtRefreshToken jwtRefreshToken = new JwtRefreshToken();
 
-        jwtRefreshToken.setTokenId(UUID.randomUUID().toString());
-        jwtRefreshToken.setUserId(userId);
+        jwtRefreshToken.setTokenID(UUID.randomUUID().toString());
+        jwtRefreshToken.setUserID(userId);
         jwtRefreshToken.setCreateDate(LocalDateTime.now());
         jwtRefreshToken.setExpirationDate(LocalDateTime.now().plus(REFRESH_EXPIRATION_IN_MS, ChronoUnit.MILLIS));
 
         return jwtRefreshTokenRepository.save(jwtRefreshToken);
     }
 
-
     @Override
-    public User generateAccessTokenFromRefreshToken(String refreshTokenId) {
+    public UserDTO generateAccessTokenFromRefreshToken(String refreshTokenId) throws AppsException {
         JwtRefreshToken jwtRefreshToken = jwtRefreshTokenRepository.findById(refreshTokenId).orElseThrow();
 
         if (jwtRefreshToken.getExpirationDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("JWT refresh token not valid");
         }
 
-        User user = userRepository.findById(jwtRefreshToken.getUserId()).orElseThrow();
+        User user = userRepository.findById(jwtRefreshToken.getUserID()).orElseThrow();
 
         UserPrinciple userPrinciple = UserPrinciple.builder()
-                .id(user.getArtistId())
+                .id(user.getArtistID())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(Set.of(SecurityUtils.convertToAuthority(user.getRole().name())))
@@ -63,9 +64,11 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
 
         String accessToken = jwtProvider.generateToken(userPrinciple);
 
-        user.setAccessToken(accessToken);
-        user.setRefreshToken(refreshTokenId);
+        UserDTO userDTO = new UserDTO(user);
 
-        return user;
+        userDTO.setAccessToken(accessToken);
+        userDTO.setRefreshToken(refreshTokenId);
+
+        return userDTO;
     }
 }

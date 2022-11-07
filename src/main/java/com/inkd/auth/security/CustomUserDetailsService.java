@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return UserPrinciple.builder()
                 .user(user)
-                .id(user.getArtistId())
+                .id(user.getArtistID())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)
