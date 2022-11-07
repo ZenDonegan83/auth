@@ -1,7 +1,7 @@
 package com.inkd.auth.controller.authentication;
 
 
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.service.authentication.AuthenticationService;
 import com.inkd.auth.service.authentication.JwtRefreshTokenService;
 import com.inkd.auth.service.user.UserService;

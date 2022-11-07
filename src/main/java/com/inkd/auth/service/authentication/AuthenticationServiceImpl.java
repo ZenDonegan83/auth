@@ -1,7 +1,7 @@
 package com.inkd.auth.service.authentication;
 
 
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.security.UserPrinciple;
 import com.inkd.auth.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;

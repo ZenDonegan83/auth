@@ -1,7 +1,7 @@
 package com.inkd.auth.security;
 
 
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.service.user.UserService;
 import com.inkd.auth.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.inkd.auth.security;
 
-import com.inkd.auth.constants.Role;
+import com.inkd.auth.constants.AppsConstants;
 import com.inkd.auth.security.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,12 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/users/**").permitAll()
-                .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/api/admin/**").hasRole(AppsConstants.Role.ADMIN.name())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {

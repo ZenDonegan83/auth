@@ -1,7 +1,7 @@
 package com.inkd.auth.repository.user;
 
-import com.inkd.auth.constants.Role;
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.model.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Query("update User set role = :role where username = :username")
-    void updateUserRole(@Param("username") String username, @Param("role") Role role);
+    void updateUserRole(@Param("username") String username, @Param("role") AppsConstants.Role role);
 }

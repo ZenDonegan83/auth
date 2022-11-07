@@ -1,6 +1,6 @@
 package com.inkd.auth.security;
 
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.model.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

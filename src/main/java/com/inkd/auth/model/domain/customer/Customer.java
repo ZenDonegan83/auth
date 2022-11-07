@@ -1,4 +1,4 @@
-package com.inkd.auth.entity.customer;
+package com.inkd.auth.model.domain.customer;
 
 
 import javax.persistence.*;

@@ -1,7 +1,7 @@
 package com.inkd.auth.service.user;
 
-import com.inkd.auth.constants.Role;
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.model.domain.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface UserService {
 
     Optional<User> findByUsername(String username);
 
-    void changeRole(Role newRole, String username);
+    void changeRole(AppsConstants.Role newRole, String username);
 
     List<User> findAllUsers();
 }

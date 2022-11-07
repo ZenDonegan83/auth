@@ -1,4 +1,4 @@
-package com.inkd.auth.entity.authentication;
+package com.inkd.auth.model.domain.authentication;
 
 
 import lombok.Data;

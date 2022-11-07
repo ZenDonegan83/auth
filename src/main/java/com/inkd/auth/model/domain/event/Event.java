@@ -1,4 +1,4 @@
-package com.inkd.auth.entity.event;
+package com.inkd.auth.model.domain.event;
 
 import javax.persistence.*;
 

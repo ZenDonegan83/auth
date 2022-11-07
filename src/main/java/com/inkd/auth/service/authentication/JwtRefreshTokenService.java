@@ -1,7 +1,7 @@
 package com.inkd.auth.service.authentication;
 
-import com.inkd.auth.entity.authentication.JwtRefreshToken;
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.model.domain.authentication.JwtRefreshToken;
+import com.inkd.auth.model.domain.user.User;
 
 public interface JwtRefreshTokenService {
 

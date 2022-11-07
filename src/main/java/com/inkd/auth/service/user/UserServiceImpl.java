@@ -1,7 +1,7 @@
 package com.inkd.auth.service.user;
 
-import com.inkd.auth.constants.Role;
-import com.inkd.auth.entity.user.User;
+import com.inkd.auth.constants.AppsConstants;
+import com.inkd.auth.model.domain.user.User;
 import com.inkd.auth.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(AppsConstants.Role.USER);
         user.setCreateTime(LocalDateTime.now());
 
         return userRepository.save(user);
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changeRole(Role newRole, String username) {
+    public void changeRole(AppsConstants.Role newRole, String username) {
         userRepository.updateUserRole(username, newRole);
     }
 

@@ -1,6 +1,6 @@
-package com.inkd.auth.entity.user;
+package com.inkd.auth.model.domain.user;
 
-import com.inkd.auth.constants.Role;
+import com.inkd.auth.constants.AppsConstants;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 50)
-    private Role role;
+    private AppsConstants.Role role;
 
     @Transient
     private String accessToken;
@@ -110,11 +110,11 @@ public class User {
         this.createTime = createTime;
     }
 
-    public Role getRole() {
+    public AppsConstants.Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(AppsConstants.Role role) {
         this.role = role;
     }
 
