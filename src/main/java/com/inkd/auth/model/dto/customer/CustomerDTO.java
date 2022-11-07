@@ -1,36 +1,40 @@
-package com.inkd.auth.model.domain.customer;
+package com.inkd.auth.model.dto.customer;
 
+import com.inkd.auth.model.domain.customer.Customer;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(name = "customers")
-public class Customer {
+public class CustomerDTO implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CUSTOMER_ID")
+    private static final long serialVersionUID = 835777959887160026L;
+
     private Long customerID;
 
-    @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "LAST_NAME", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "TEL_NUMBER", unique = true, nullable = false, length = 50)
     private String telNumber;
 
-    @Column(name = "EMAIL", unique = true, nullable = false, length = 255)
     private String email;
 
-    @Lob
-    @Column(name = "PROFILE_PIC")
+    private Date createDate;
+
     private byte[] profilePic;
 
-    @Column(name = "CREATED_DATE", nullable = false)
-    private Date createDate;
+    public CustomerDTO() {
+    }
+
+    public CustomerDTO(Customer customer) {
+        this.customerID = customer.getCustomerID();
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
+        this.telNumber = customer.getTelNumber();
+        this.email = customer.getEmail();
+        this.createDate = customer.getCreateDate();
+        this.profilePic = customer.getProfilePic();
+    }
 
     public Long getCustomerID() {
         return customerID;
