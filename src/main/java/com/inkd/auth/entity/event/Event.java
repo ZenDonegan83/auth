@@ -1,31 +1,29 @@
-package com.inkd.auth.entity;
+package com.inkd.auth.entity.event;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="event")
+@Table(name = "event")
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
 
-    @Column(name="cost")
+    @Column(name = "cost")
     private float cost;
 
-    @Column(name="tattoo_location", nullable = false, length = 50)
+    @Column(name = "tattoo_location", nullable = false, length = 50)
     private String tattooLocation;
 
-    @Column(name="comments", length = 1200)
+    @Column(name = "comments", length = 1200)
     private String comments;
 
-    @Column(name="cancelled")
+    @Column(name = "cancelled")
     private boolean cancelled;
 
-    @Column(name="no_show")
+    @Column(name = "no_show")
     private boolean noShow;
-
-
 
     public Long getEventId() {
         return eventId;

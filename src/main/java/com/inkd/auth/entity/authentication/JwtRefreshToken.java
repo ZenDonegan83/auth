@@ -1,4 +1,4 @@
-package com.inkd.auth.entity;
+package com.inkd.auth.entity.authentication;
 
 
 import lombok.Data;
@@ -11,21 +11,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table( name= "jwt_refresh_token")
+@Table(name = "jwt_refresh_token")
 public class JwtRefreshToken {
 
-
     @Id
-    @Column(name="token_id", nullable = false)
+    @Column(name = "token_id", nullable = false)
     private String tokenId;
 
-    @Column(name="user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name="create_date", nullable = false)
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name="expiration_date", nullable = false)
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
-
 }

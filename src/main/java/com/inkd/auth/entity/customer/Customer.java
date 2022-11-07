@@ -1,32 +1,28 @@
-package com.inkd.auth.entity;
+package com.inkd.auth.entity.customer;
 
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="customer")
+@Table(name = "customer")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
-    @Column(name="first_name", nullable = false, length = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name="last_name", nullable = false, length = 50)
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name="number", unique = true, nullable = false, length = 50)
+    @Column(name = "number", unique = true, nullable = false, length = 50)
     private int number;
 
-    @Column(name="create_time",nullable = false)
+    @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
-
-
-
-
 
     public Long getCustomerId() {
         return customerId;

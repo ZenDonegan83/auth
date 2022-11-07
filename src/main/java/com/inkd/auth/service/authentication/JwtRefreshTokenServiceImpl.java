@@ -1,9 +1,9 @@
-package com.inkd.auth.service;
+package com.inkd.auth.service.authentication;
 
-import com.inkd.auth.entity.JwtRefreshToken;
-import com.inkd.auth.entity.User;
-import com.inkd.auth.repository.JwtRefreshTokenRepository;
-import com.inkd.auth.repository.UserRepository;
+import com.inkd.auth.entity.authentication.JwtRefreshToken;
+import com.inkd.auth.entity.user.User;
+import com.inkd.auth.repository.authentication.JwtRefreshTokenRepository;
+import com.inkd.auth.repository.user.UserRepository;
 import com.inkd.auth.security.UserPrinciple;
 import com.inkd.auth.security.jwt.JwtProvider;
 import com.inkd.auth.utils.SecurityUtils;
@@ -31,10 +31,8 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     @Autowired
     private JwtProvider jwtProvider;
 
-
     @Override
-    public JwtRefreshToken createRefreshToken(Long userId)
-    {
+    public JwtRefreshToken createRefreshToken(Long userId) {
         JwtRefreshToken jwtRefreshToken = new JwtRefreshToken();
 
         jwtRefreshToken.setTokenId(UUID.randomUUID().toString());
@@ -47,12 +45,10 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
 
 
     @Override
-    public User generateAccessTokenFromRefreshToken(String refreshTokenId)
-    {
+    public User generateAccessTokenFromRefreshToken(String refreshTokenId) {
         JwtRefreshToken jwtRefreshToken = jwtRefreshTokenRepository.findById(refreshTokenId).orElseThrow();
 
-        if(jwtRefreshToken.getExpirationDate().isBefore(LocalDateTime.now()))
-        {
+        if (jwtRefreshToken.getExpirationDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("JWT refresh token not valid");
         }
 
@@ -72,5 +68,4 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
 
         return user;
     }
-
 }

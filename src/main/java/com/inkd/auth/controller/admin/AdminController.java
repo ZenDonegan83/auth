@@ -1,7 +1,7 @@
-package com.inkd.auth.controller;
+package com.inkd.auth.controller.admin;
 
 
-import com.inkd.auth.service.UserService;
+import com.inkd.auth.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +16,7 @@ public class AdminController {
     private UserService userService;
 
     @GetMapping("all") //api/admin/all
-    public ResponseEntity<?> findAllUsers()
-    {
-       return ResponseEntity.ok(userService.findAllUsers());
+    public ResponseEntity<?> findAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
-
-
 }

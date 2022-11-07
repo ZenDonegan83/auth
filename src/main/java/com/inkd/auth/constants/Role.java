@@ -1,4 +1,4 @@
-package com.inkd.auth.entity;
+package com.inkd.auth.constants;
 
 public enum Role {
     USER,

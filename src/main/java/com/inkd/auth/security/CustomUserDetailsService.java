@@ -1,8 +1,8 @@
 package com.inkd.auth.security;
 
 
-import com.inkd.auth.entity.User;
-import com.inkd.auth.service.UserService;
+import com.inkd.auth.entity.user.User;
+import com.inkd.auth.service.user.UserService;
 import com.inkd.auth.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -27,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with" + username));
 
         Set<GrantedAuthority> authorities = Set.of(SecurityUtils.convertToAuthority(user.getRole().name()));
-
 
 
         return UserPrinciple.builder()

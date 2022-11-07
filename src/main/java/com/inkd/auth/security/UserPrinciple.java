@@ -1,7 +1,10 @@
 package com.inkd.auth.security;
 
-import com.inkd.auth.entity.User;
-import lombok.*;
+import com.inkd.auth.entity.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,7 +22,6 @@ public class UserPrinciple implements UserDetails {
     transient private String password;
     transient private User user; // not good practice for testing only
     private Set<GrantedAuthority> authorities;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

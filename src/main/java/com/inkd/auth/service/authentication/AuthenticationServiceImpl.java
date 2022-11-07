@@ -1,7 +1,7 @@
-package com.inkd.auth.service;
+package com.inkd.auth.service.authentication;
 
 
-import com.inkd.auth.entity.User;
+import com.inkd.auth.entity.user.User;
 import com.inkd.auth.security.UserPrinciple;
 import com.inkd.auth.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         String jwt = jwtProvider.generateToken(userPrinciple);
 
         User signInUser = userPrinciple.getUser();
+
         signInUser.setAccessToken(jwt);
         signInUser.setRefreshToken(jwtRefreshTokenService.createRefreshToken(signInUser.getArtistId()).getTokenId());
 

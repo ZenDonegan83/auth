@@ -1,41 +1,43 @@
-package com.inkd.auth.entity;
+package com.inkd.auth.entity.user;
+
+import com.inkd.auth.constants.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long artistId;
 
-    @Column(name="username", unique = true, nullable = false, length = 50)
+    @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(name="first_name", nullable = false, length = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name="last_name", nullable = false, length = 50)
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name="password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name="email", unique = true, nullable = false, length = 50)
+    @Column(name = "email", unique = true, nullable = false, length = 50)
     private String email;
 
     @Lob
-    @Column(name="profile_pic")
+    @Column(name = "profile_pic")
     private byte[] profile_pic;
 
-    @Column(name="create_time",nullable = false)
+    @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="role", nullable = false, length = 50)
+    @Column(name = "role", nullable = false, length = 50)
     private Role role;
 
     @Transient
@@ -43,7 +45,6 @@ public class User {
 
     @Transient
     private String refreshToken;
-
 
     public Long getArtistId() {
         return artistId;
