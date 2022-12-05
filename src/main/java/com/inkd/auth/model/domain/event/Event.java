@@ -38,7 +38,7 @@ public class Event {
     @Column(name = "IMAGES")
     private byte[] images;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "START_DATE")
     private Date startDate;
 
