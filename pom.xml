@@ -84,6 +84,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.socketlabs</groupId>
+            <artifactId>injectionApi</artifactId>
+            <version>1.2.1</version>
+        </dependency>
     </dependencies>
 
     <build>
