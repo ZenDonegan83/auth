@@ -2,13 +2,13 @@ package com.inkd.auth.model.dto.pdf;
 
 public class PdfFileSignInRQ {
 
-    private Integer pdfFileID;
+    private Long pdfFileID;
 
-    public Integer getPdfFileID() {
+    public Long getPdfFileID() {
         return pdfFileID;
     }
 
-    public void setPdfFileID(Integer pdfFileID) {
+    public void setPdfFileID(Long pdfFileID) {
         this.pdfFileID = pdfFileID;
     }
 }

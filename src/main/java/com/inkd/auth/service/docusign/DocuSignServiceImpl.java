@@ -3,8 +3,10 @@ package com.inkd.auth.service.docusign;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inkd.auth.exception.AppsException;
+import com.inkd.auth.model.domain.pdf.PdfFile;
 import com.inkd.auth.model.dto.docusign.*;
 import com.inkd.auth.model.dto.pdf.PdfFileSignInRQ;
+import com.inkd.auth.repository.pdf.PdfRepository;
 import com.inkd.auth.service.docusign.support.DocuSignAuthorizeCodeGrantAccessTokenAPI;
 import com.inkd.auth.service.docusign.support.DocuSignRefreshAccessTokenAPI;
 import com.inkd.auth.service.docusign.support.DocuSignUserInfoAPI;
@@ -36,6 +38,9 @@ public class DocuSignServiceImpl implements DocuSignService {
 
     @Autowired
     private DocuSignAuthorizeCodeGrantAccessTokenAPI docuSignAuthorizeCodeGrantAccessTokenAPI;
+
+    @Autowired
+    private PdfRepository pdfRepository;
 
     @Override
     public DocuSignUserInfoRS getUserInfo() throws AppsException {
@@ -89,46 +94,51 @@ public class DocuSignServiceImpl implements DocuSignService {
 
     @Override
     public void signInPDF(PdfFileSignInRQ signInRQ) throws AppsException, IOException {
-        DocuSignAuthRS authRS = this.getRefreshAccessTokens();
+        if (signInRQ.getPdfFileID() != null) {
+            if (this.pdfRepository.existsById(signInRQ.getPdfFileID())) {
+                PdfFile pdfFile = this.pdfRepository.getById(signInRQ.getPdfFileID());
 
-        // FIXME: 2022-12-22 Just send a sample PDF from PC for testing
-        String filePath = "/Users/gayan/Documents/Files/PDF/test.pdf";
-        File file = new File(filePath);
+                DocuSignAuthRS authRS = this.getRefreshAccessTokens();
 
-        //Get PDF data as byte array
-        // FIXME: 2022-12-22
-//        String base64EncodedBytes = Base64.getEncoder().encodeToString(pdfFile.getData());
-        String base64EncodedBytes = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+                // FIXME: 2022-12-22 Just send a sample PDF from PC for testing
+                //  Pass the PDF file name and get file form s3 after completing the s3 config
+                String filePath = "/Users/gayan/Documents/Files/PDF/test.pdf";
+                File file = new File(filePath);
 
-        DocuSignEnvelopeRQ envelopeRQ = new DocuSignEnvelopeRQ();
+                //Get PDF data as byte array
+                String base64EncodedBytes = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
 
-        //Documents
-        DocuSignDocumentsDTO document = new DocuSignDocumentsDTO();
-        document.setDocumentBase64(base64EncodedBytes);
-        document.setDocumentId(AppsUtils.getRandomInt());
-        document.setFileExtension("pdf");
-        document.setName("Sign In Document");
+                DocuSignEnvelopeRQ envelopeRQ = new DocuSignEnvelopeRQ();
 
-        //Recipients
-        DocuSignRecipientDTO recipient = new DocuSignRecipientDTO();
+                //Documents
+                DocuSignDocumentsDTO document = new DocuSignDocumentsDTO();
+                document.setDocumentBase64(base64EncodedBytes);
+                document.setDocumentId(AppsUtils.getRandomInt());
+                document.setFileExtension("pdf");
+                document.setName("Sign In Document");
 
-        DocuSignSignerDTO signer = new DocuSignSignerDTO();
-        // FIXME: 2022-12-22
-//        signer.setEmail(user.getEmail());
-        signer.setEmail("gayanviraj21@gmail.com");
-        // FIXME: 2022-12-22
-//        signer.setName(user.getUserName());
-        signer.setName("gayan");
-        signer.setRecipientId("1234");
+                //Recipients
+                DocuSignRecipientDTO recipient = new DocuSignRecipientDTO();
 
-        recipient.getSigners().add(signer);
+                DocuSignSignerDTO signer = new DocuSignSignerDTO();
+                signer.setEmail(pdfFile.getEvent().getCustomer().getEmail());
+                signer.setName(pdfFile.getEvent().getCustomer().getFirstName());
+                signer.setRecipientId(String.valueOf(pdfFile.getEvent().getCustomer().getCustomerID()));
 
-        envelopeRQ.getDocuments().add(document);
-        envelopeRQ.setEmailSubject("Simple Signing Example");
-        envelopeRQ.setRecipients(recipient);
-        envelopeRQ.setStatus("sent");
+                recipient.getSigners().add(signer);
 
-        this.docuSignCreateEnvelopeAPI.sendSignEnvelope(envelopeRQ, authRS.getAccessToken());
+                envelopeRQ.getDocuments().add(document);
+                envelopeRQ.setEmailSubject("Simple Signing Example");
+                envelopeRQ.setRecipients(recipient);
+                envelopeRQ.setStatus("sent");
+
+                this.docuSignCreateEnvelopeAPI.sendSignEnvelope(envelopeRQ, authRS.getAccessToken());
+            } else {
+                throw new AppsException("PDF is not exists in system");
+            }
+        } else {
+            throw new AppsException("PDF ID is not valid");
+        }
     }
 }
 
