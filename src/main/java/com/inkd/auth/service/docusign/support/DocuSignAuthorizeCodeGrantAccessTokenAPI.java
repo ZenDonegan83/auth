@@ -1,5 +1,6 @@
 package com.inkd.auth.service.docusign.support;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,13 +15,16 @@ import java.util.Collections;
 @Component
 public class DocuSignAuthorizeCodeGrantAccessTokenAPI {
 
-    private static String authorizeCodeGrantAccessTokenAPIURL = "https://account-d.docusign.com/oauth/token";
+    @Value("${docusign.authorize.code.grant.access.token.api.url}")
+    private String authorizeCodeGrantAccessTokenAPIURL;
 
     private static String code = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAYABwAAy0SQwOPaSAgAAFfL18Dj2kgCANkjenJfpnRAg7w8ya9uJkcVAAEAAAAYAAEAAAAFAAAADQAkAAAAOGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2IgAkAAAAOGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2NwAVBpJ1k8jCQZLXZm0G8dw9MACA0DbUvuPaSA.h_hsvo68IIXJx8JGdwrg-AH5BMzlDL66T0BUBOBbali42ziB0T4ssF3_aHI2ma4accQplcfGYjZ78s85DJb5W39QJaLqoDBwdCdLJuqP596qKGpbOIioZqSA-YE8VwUC9Si6zCObf8RwwMvcHbccsLz_P6CJFRjFhzI_WIXwdP45Ec-2r6_U4VfFMbqp6KS9m6oLH2is2ocq9azgUo2WbLK5Ta0fuAs0gaVtId810a8FRURUQIxGQrrZBAVATLeP3OLUlF_d8abwjng7if-2w6k-WCD0LZXkU0YvECff2hLYnrY_qpiP5ElTmaqNr0Ryl-sZSBwkqt81XGGBdv6tSA";
 
-    private static String grantType = "authorization_code";
+    @Value("${docusign.grant.type.authorization.code}")
+    private String grantType;
 
-    private static String encodedKeys = "Basic OGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2OjIxY2VlYTFhLTAxZDMtNDBmZC1hNTVhLWE1ZTM3YTlkZjM4MQ==";
+    @Value("${docusign.encoded.keys}")
+    private String encodedKeys;
 
     public String getAccessTokens() {
         String responseBody;

@@ -3,21 +3,27 @@ package com.inkd.auth.service.docusign;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inkd.auth.exception.AppsException;
-import com.inkd.auth.model.dto.docusign.DocuSignAuthRS;
-import com.inkd.auth.model.dto.docusign.DocuSignEnvelopeRQ;
-import com.inkd.auth.model.dto.docusign.DocuSignUserInfoRS;
+import com.inkd.auth.model.dto.docusign.*;
+import com.inkd.auth.model.dto.pdf.PdfFileSignInRQ;
 import com.inkd.auth.service.docusign.support.DocuSignAuthorizeCodeGrantAccessTokenAPI;
 import com.inkd.auth.service.docusign.support.DocuSignRefreshAccessTokenAPI;
 import com.inkd.auth.service.docusign.support.DocuSignUserInfoAPI;
 import com.inkd.auth.service.docusign.support.DocuSignCreateEnvelopeAPI;
+import com.inkd.auth.utils.AppsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 
 @Service
 public class DocuSignServiceImpl implements DocuSignService {
 
-    private static String accessToken
-            = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAgABwAA3T7oreLaSAgAAF2j4ED62kgCANkjenJfpnRAg7w8ya9uJkcVAAEAAAAYAAEAAAAFAAAADQAkAAAAOGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2IgAkAAAAOGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2MAAA7SaXneLaSDcAFQaSdZPIwkGS12ZtBvHcPQ.VCFIcr85f59iZwN9-r7AVHPoo4OcxnBJq4Ta8reR7P-UaIbfCK92v6IHrx24rxSIB40R84lsTJAva_QLDHHSCnavVVBctYbSSmcosO4uSP5DsaatUd8oKHETDiujapCPGhFZMqNubRoajeTRbfzuE3c9oawNTFlogd-U_T_Oumz0Id6Raxl19yDxcEd7WEnsZKP9ckc79cqeWO1OB2lBUJw7GWOr0wqZByH2gaNi50M28t5d8ztFrxoPex2aqTknRHU_GcE9H7UBfcqW2DVWBO49-tdfr4t2lhne-h37KcjIp_Yiby2YbHHiCsjQJoiuaVX_ZZGDuW3ONuSixfYkww";
+    @Value("${docusign.access.token}")
+    private String accessToken;
 
     @Autowired
     private DocuSignUserInfoAPI dociSignUserInfoAPI;
@@ -47,10 +53,6 @@ public class DocuSignServiceImpl implements DocuSignService {
         }
 
         return docuSignUserInfoRS;
-    }
-
-    public void sendSignEnvelope(DocuSignEnvelopeRQ envelopeRQ) {
-        this.docuSignCreateEnvelopeAPI.sendSignEnvelope(envelopeRQ);
     }
 
     public DocuSignAuthRS getAccessTokens() throws AppsException {
@@ -83,6 +85,50 @@ public class DocuSignServiceImpl implements DocuSignService {
         }
 
         return docuSignAuthRS;
+    }
+
+    @Override
+    public void signInPDF(PdfFileSignInRQ signInRQ) throws AppsException, IOException {
+        DocuSignAuthRS authRS = this.getRefreshAccessTokens();
+
+        // FIXME: 2022-12-22 Just send a sample PDF from PC for testing
+        String filePath = "/Users/gayan/Documents/Files/PDF/test.pdf";
+        File file = new File(filePath);
+
+        //Get PDF data as byte array
+        // FIXME: 2022-12-22
+//        String base64EncodedBytes = Base64.getEncoder().encodeToString(pdfFile.getData());
+        String base64EncodedBytes = Base64.getEncoder().encodeToString(Files.readAllBytes(file.toPath()));
+
+        DocuSignEnvelopeRQ envelopeRQ = new DocuSignEnvelopeRQ();
+
+        //Documents
+        DocuSignDocumentsDTO document = new DocuSignDocumentsDTO();
+        document.setDocumentBase64(base64EncodedBytes);
+        document.setDocumentId(AppsUtils.getRandomInt());
+        document.setFileExtension("pdf");
+        document.setName("Sign In Document");
+
+        //Recipients
+        DocuSignRecipientDTO recipient = new DocuSignRecipientDTO();
+
+        DocuSignSignerDTO signer = new DocuSignSignerDTO();
+        // FIXME: 2022-12-22
+//        signer.setEmail(user.getEmail());
+        signer.setEmail("gayanviraj21@gmail.com");
+        // FIXME: 2022-12-22
+//        signer.setName(user.getUserName());
+        signer.setName("gayan");
+        signer.setRecipientId("1234");
+
+        recipient.getSigners().add(signer);
+
+        envelopeRQ.getDocuments().add(document);
+        envelopeRQ.setEmailSubject("Simple Signing Example");
+        envelopeRQ.setRecipients(recipient);
+        envelopeRQ.setStatus("sent");
+
+        this.docuSignCreateEnvelopeAPI.sendSignEnvelope(envelopeRQ, authRS.getAccessToken());
     }
 }
 

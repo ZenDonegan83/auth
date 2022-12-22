@@ -1,5 +1,6 @@
 package com.inkd.auth.service.docusign.support;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -8,7 +9,8 @@ import java.util.Collections;
 
 @Component
 public class DocuSignUserInfoAPI {
-    private static String userInfoURL = "https://account-d.docusign.com/oauth/userinfo";
+    @Value("${docusign.user.info.url}")
+    private String userInfoURL;
 
     public String getUserInfo(String accessToken) {
         String responseBody;

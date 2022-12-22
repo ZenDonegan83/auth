@@ -1,5 +1,6 @@
 package com.inkd.auth.service.docusign.support;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,11 +15,14 @@ import java.util.Collections;
 @Component
 public class DocuSignRefreshAccessTokenAPI {
 
-    private static String refreshTokenURL = "https://account-d.docusign.com/oauth/token";
+    @Value("${docusign.refresh.token.url}")
+    private String refreshTokenURL;
 
-    private static String encodedKeys = "Basic OGI2NDk2ZWUtYTdlMC00MjBlLTg3NzAtNDMyZjQzMDZmYTY2OjIxY2VlYTFhLTAxZDMtNDBmZC1hNTVhLWE1ZTM3YTlkZjM4MQ==";
+    @Value("${docusign.encoded.keys}")
+    private String encodedKeys;
 
-    private static String grantType = "refresh_token";
+    @Value("${docusign.grant.type.refresh_token}")
+    private String grantType;
 
     public String refreshAccessTokens(String token) {
         String responseBody;

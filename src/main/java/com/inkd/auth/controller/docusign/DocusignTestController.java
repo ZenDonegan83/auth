@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("api/docusign")
 public class DocusignTestController {
@@ -18,14 +20,14 @@ public class DocusignTestController {
     @Autowired
     private DocuSignService docuSignService;
 
-    @GetMapping(value = "/getAccessTokens", headers = "Accept=application/json")
-    public ResponseEntity<ResponseDTO<String>> findCustomerByID() {
+    @GetMapping(value = "/signInPDF", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<String>> signInPDF() {
         ResponseDTO<String> response = new ResponseDTO<>();
         HttpStatus httpStatus;
 
         try {
 //            this.docuSignService.getRefreshAccessTokens();
-            this.docuSignService.getUserInfo();
+            this.docuSignService.signInPDF(null);
 
             response.setResult("SUCCESS");
             response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
@@ -35,6 +37,8 @@ public class DocusignTestController {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             response.setAppsErrorMessages(e.getAppsErrorMessages());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         return new ResponseEntity<>(response, httpStatus);
