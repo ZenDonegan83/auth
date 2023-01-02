@@ -11,6 +11,8 @@ public class CustomerDTO implements Serializable {
 
     private Long customerID;
 
+    private String stripeID;
+
     private String firstName;
 
     private String lastName;
@@ -28,6 +30,7 @@ public class CustomerDTO implements Serializable {
 
     public CustomerDTO(Customer customer) {
         this.customerID = customer.getCustomerID();
+        this.stripeID = customer.getStripeID();
         this.firstName = customer.getFirstName();
         this.lastName = customer.getLastName();
         this.telNumber = customer.getTelNumber();
@@ -42,6 +45,14 @@ public class CustomerDTO implements Serializable {
 
     public void setCustomerID(Long customerID) {
         this.customerID = customerID;
+    }
+
+    public String getStripeID() {
+        return stripeID;
+    }
+
+    public void setStripeID(String stripeID) {
+        this.stripeID = stripeID;
     }
 
     public String getFirstName() {

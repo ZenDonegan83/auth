@@ -100,6 +100,7 @@ public class CustomerServiceImpl implements CustomerService {
                 throw new AppsException("Email is already exist");
             }
 
+            customer.setStripeID(updateCustomerDTO.getStripeID());
             customer.setFirstName(updateCustomerDTO.getFirstName());
             customer.setLastName(updateCustomerDTO.getLastName());
             customer.setTelNumber(updateCustomerDTO.getTelNumber());
@@ -135,5 +136,28 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer findCustomerByID(Long customerID) throws AppsException {
         return customerRepository.getById(customerID);
+    }
+
+    @Override
+    public CustomerDTO updateStripeID(CustomerDTO customerDTO) throws AppsException {
+        if (customerDTO.getCustomerID() == null) {
+            throw new AppsException("Customer ID is not valid");
+        }
+
+        if (!this.existsById(customerDTO.getCustomerID())) {
+            throw new AppsException("Customer is not found");
+        } else {
+            Customer customer = customerRepository.getById(customerDTO.getCustomerID());
+
+            customer.setStripeID(customerDTO.getStripeID());
+            customer = this.customerRepository.saveAndFlush(customer);
+
+            return new CustomerDTO(customer);
+        }
+    }
+
+    @Override
+    public Customer findByStripeID(String stripeID) throws AppsException {
+        return this.customerRepository.findByStripeID(stripeID);
     }
 }
