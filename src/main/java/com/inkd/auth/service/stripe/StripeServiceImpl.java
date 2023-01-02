@@ -46,28 +46,36 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public SubscriptionDTO createSubscription(SubscriptionCreateRQ subscriptionCreateRQ) throws StripeException {
-        this.setAPIKey();
+    public SubscriptionDTO createSubscription(SubscriptionCreateRQ subscriptionCreateRQ) throws StripeException, AppsException {
+        CustomerDTO customerDTO = this.customerService.findByID(subscriptionCreateRQ.getCustomerID());
 
-        List<Object> items = new ArrayList<>();
+        if (customerDTO.getStripeID() == null) {
+            throw new AppsException("Customer Stripe ID is not found");
+        } else {
+            this.setAPIKey();
 
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put(
-                "price",
-                "price_1MBzNQLUDXVZUnKjmIqG7gVY"
-        );
-        items.add(item1);
+            List<Object> items = new ArrayList<>();
 
-        Map<String, Object> params = new HashMap<>();
+            // FIXME: 2023-01-03
+            Map<String, Object> item1 = new HashMap<>();
+            item1.put(
+                    "price",
+                    "price_1MBzNQLUDXVZUnKjmIqG7gVY"
+            );
+            items.add(item1);
 
-        params.put("customer", "cus_N62zGn9z7RgiNE");
-        params.put("items", items);
+            Map<String, Object> params = new HashMap<>();
 
-        Subscription subscription = Subscription.create(params);
+            params.put("customer", customerDTO.getStripeID());
+            params.put("items", items);
 
-        SubscriptionDTO subscriptionDTO = AppsUtils.jsonToObjectMapper(subscription.toJson(), SubscriptionDTO.class);
+            Subscription subscription = Subscription.create(params);
 
-        return subscriptionDTO;
+            SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+            subscriptionDTO.setId(subscription.getId());
+
+            return subscriptionDTO;
+        }
     }
 
     @Override
@@ -104,6 +112,26 @@ public class StripeServiceImpl implements StripeService {
                 com.inkd.auth.model.domain.customer.Customer customer = this.customerService.findByStripeID(stripeCustomer.getId());
                 return new CustomerDTO(customer);
             }
+        }
+    }
+
+    @Override
+    public CustomerDTO updateCustomer(StripeCustomerUpdateRQ updateRQ) throws StripeException, AppsException {
+        Customer stripeCustomer = Customer.retrieve(updateRQ.getCustomerStripeID());
+
+        if (stripeCustomer == null) {
+            throw new AppsException("Customer not found in Stripe");
+        } else {
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("order_id", "6735");
+            Map<String, Object> params = new HashMap<>();
+            params.put("metadata", metadata);
+
+            Customer updatedCustomer = stripeCustomer.update(params);
+
+            com.inkd.auth.model.domain.customer.Customer customer = this.customerService.findByStripeID(updatedCustomer.getId());
+
+            return new CustomerDTO(customer);
         }
     }
 }
