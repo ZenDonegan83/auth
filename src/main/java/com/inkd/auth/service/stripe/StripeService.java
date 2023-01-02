@@ -18,4 +18,8 @@ public interface StripeService {
     CustomerDTO retrieveCustomer(String stripeID) throws StripeException, AppsException;
 
     CustomerDTO updateCustomer(StripeCustomerUpdateRQ updateRQ) throws StripeException, AppsException;
+
+    SubscriptionDTO updateSubscription(SubscriptionUpdateRQ updateRQ) throws StripeException, AppsException;
+
+    SubscriptionDTO cancelSubscription(SubscriptionCancelRQ cancelRQ) throws StripeException, AppsException;
 }

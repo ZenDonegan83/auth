@@ -39,6 +39,7 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -64,6 +65,7 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -89,6 +91,7 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -114,6 +117,7 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -139,6 +143,59 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PostMapping(value = "/updateSubscription", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> updateSubscription(@RequestBody SubscriptionUpdateRQ updateRQ) {
+        ResponseDTO<SubscriptionDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            SubscriptionDTO subscriptionDTO = this.stripeService.updateSubscription(updateRQ);
+
+            response.setResult(subscriptionDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PostMapping(value = "/cancelSubscription", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<SubscriptionDTO>> cancelSubscription(@RequestBody SubscriptionCancelRQ cancelRQ) {
+        ResponseDTO<SubscriptionDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            SubscriptionDTO subscriptionDTO = this.stripeService.cancelSubscription(cancelRQ);
+
+            response.setResult(subscriptionDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
         }
 
         return new ResponseEntity<>(response, httpStatus);

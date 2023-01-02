@@ -134,4 +134,32 @@ public class StripeServiceImpl implements StripeService {
             return new CustomerDTO(customer);
         }
     }
+
+    @Override
+    public SubscriptionDTO updateSubscription(SubscriptionUpdateRQ updateRQ) throws StripeException, AppsException {
+        Subscription subscription = Subscription.retrieve(updateRQ.getSubscriptionID());
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("order_id", "6735");
+        Map<String, Object> params = new HashMap<>();
+        params.put("metadata", metadata);
+
+        Subscription updatedSubscription = subscription.update(params);
+
+        SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+
+        return subscriptionDTO;
+    }
+
+    @Override
+    public SubscriptionDTO cancelSubscription(SubscriptionCancelRQ cancelRQ) throws StripeException, AppsException {
+        Subscription subscription = Subscription.retrieve(cancelRQ.getSubscriptionID());
+
+        Subscription deletedSubscription = subscription.cancel();
+
+        SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+        subscriptionDTO.setId(deletedSubscription.getId());
+
+        return subscriptionDTO;
+    }
 }
