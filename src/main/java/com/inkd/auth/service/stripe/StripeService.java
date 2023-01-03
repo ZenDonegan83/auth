@@ -25,11 +25,15 @@ public interface StripeService {
 
     SubscriptionDTO cancelSubscription(SubscriptionCancelRQ cancelRQ) throws StripeException, AppsException;
 
-    CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException;
-
     CardHolderDTO createCardHolder(CardHolderCreateRQ createRQ) throws StripeException, AppsException;
 
     CardHolderDTO retrieveCardHolder(String cardHolderID) throws StripeException, AppsException;
 
     List<CardHolderDTO> getAllCardHolders() throws StripeException, AppsException;
+
+    CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException;
+
+    CardDTO retrieveCard(String cardID) throws StripeException, AppsException;
+
+    List<CardDTO> getAllCards() throws StripeException, AppsException;
 }

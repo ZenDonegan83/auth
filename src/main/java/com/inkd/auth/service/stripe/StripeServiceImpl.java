@@ -9,8 +9,10 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
+import com.stripe.model.PaymentSourceCollection;
 import com.stripe.model.Subscription;
 import com.stripe.model.issuing.Card;
+import com.stripe.model.issuing.CardCollection;
 import com.stripe.model.issuing.Cardholder;
 import com.stripe.model.issuing.CardholderCollection;
 import com.stripe.param.CustomerListParams;
@@ -168,28 +170,6 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException {
-
-        this.setAPIKey();
-
-        Map<String, Object> params = new HashMap<>();
-
-        params.put("cardholder", createRQ.getStripeCardHolder());
-        params.put("currency", "eur");
-        params.put("type", "virtual");
-
-        Card card = Card.create(params);
-
-        CardDTO cardDTO = new CardDTO();
-
-        cardDTO.setStripeCardID(card.getId());
-        cardDTO.setCurrency(card.getCurrency());
-        cardDTO.setType(card.getType());
-
-        return cardDTO;
-    }
-
-    @Override
     public CardHolderDTO createCardHolder(CardHolderCreateRQ createRQ) throws StripeException, AppsException {
         this.setAPIKey();
 
@@ -265,5 +245,69 @@ public class StripeServiceImpl implements StripeService {
         }
 
         return cardHolderDTOList;
+    }
+
+    @Override
+    public CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException {
+        this.setAPIKey();
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("cardholder", createRQ.getStripeCardHolder());
+        params.put("currency", "eur");
+        params.put("type", "virtual");
+
+        Card card = Card.create(params);
+
+        CardDTO cardDTO = new CardDTO();
+
+        cardDTO.setStripeCardID(card.getId());
+        cardDTO.setCurrency(card.getCurrency());
+        cardDTO.setType(card.getType());
+
+        return cardDTO;
+    }
+
+    @Override
+    public CardDTO retrieveCard(String cardID) throws StripeException, AppsException {
+        this.setAPIKey();
+
+        Card card = Card.retrieve(cardID);
+
+        if (card == null) {
+            throw new AppsException("Card not found in Stripe");
+        } else {
+            CardDTO cardDTO = new CardDTO();
+
+            cardDTO.setStripeCardID(card.getId());
+            cardDTO.setCurrency(card.getCurrency());
+            cardDTO.setType(card.getType());
+
+            return cardDTO;
+        }
+    }
+
+    @Override
+    public List<CardDTO> getAllCards() throws StripeException, AppsException {
+        this.setAPIKey();
+
+        List<CardDTO> cardDTOList = new ArrayList<>();
+
+        Map<String, Object> params = new HashMap<>();
+        CardCollection cards = Card.list(params);
+
+        List<Card> cardList = cards.getData();
+
+        for (Card card : cardList) {
+            CardDTO cardDTO = new CardDTO();
+
+            cardDTO.setStripeCardID(card.getId());
+            cardDTO.setCurrency(card.getCurrency());
+            cardDTO.setType(card.getType());
+
+            cardDTOList.add(cardDTO);
+        }
+
+        return cardDTOList;
     }
 }
