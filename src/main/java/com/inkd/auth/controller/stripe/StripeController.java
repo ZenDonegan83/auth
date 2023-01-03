@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,7 +42,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -69,7 +69,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -95,7 +96,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -121,7 +123,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -147,7 +150,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -173,7 +177,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -199,7 +204,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -225,7 +231,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -251,7 +258,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -277,7 +285,8 @@ public class StripeController {
         } catch (StripeException e) {
             response.setStatus(AppsConstants.ResponseStatus.FAILED);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e.getMessage());
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe error message : " + e.getMessage()));
+            response.getAppsErrorMessages().add(new AppsErrorMessage("Stripe user message : " + e.getUserMessage()));
         }
 
         return new ResponseEntity<>(response, httpStatus);

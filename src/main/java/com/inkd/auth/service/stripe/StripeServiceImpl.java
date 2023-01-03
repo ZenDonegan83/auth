@@ -9,7 +9,6 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
-import com.stripe.model.PaymentSourceCollection;
 import com.stripe.model.Subscription;
 import com.stripe.model.issuing.Card;
 import com.stripe.model.issuing.CardCollection;
