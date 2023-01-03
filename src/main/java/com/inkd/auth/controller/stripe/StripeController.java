@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/stripe")
 public class StripeController {
@@ -184,6 +186,110 @@ public class StripeController {
             SubscriptionDTO subscriptionDTO = this.stripeService.cancelSubscription(cancelRQ);
 
             response.setResult(subscriptionDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PostMapping(value = "/createCard", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<CardDTO>> createCard(@RequestBody CardCreateRQ createRQ) {
+        ResponseDTO<CardDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            CardDTO cardDTO = this.stripeService.createCard(createRQ);
+
+            response.setResult(cardDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @PostMapping(value = "/createCardHolder", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<CardHolderDTO>> createCardHolder(@RequestBody CardHolderCreateRQ createRQ) {
+        ResponseDTO<CardHolderDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            CardHolderDTO cardHolder = this.stripeService.createCardHolder(createRQ);
+
+            response.setResult(cardHolder);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @GetMapping(value = "/retrieveCardHolder/{cardHolderID}", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<CardHolderDTO>> retrieveCardHolder(@PathVariable String cardHolderID) {
+        ResponseDTO<CardHolderDTO> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            CardHolderDTO cardHolderDTO = this.stripeService.retrieveCardHolder(cardHolderID);
+
+            response.setResult(cardHolderDTO);
+            response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
+            httpStatus = HttpStatus.OK;
+
+        } catch (AppsException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response.setAppsErrorMessages(e.getAppsErrorMessages());
+
+        } catch (StripeException e) {
+            response.setStatus(AppsConstants.ResponseStatus.FAILED);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            System.out.println(e.getMessage());
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @GetMapping(value = "/getAllCardHolders", headers = "Accept=application/json")
+    public ResponseEntity<ResponseDTO<List<CardHolderDTO>>> getAllCardHolders() {
+        ResponseDTO<List<CardHolderDTO>> response = new ResponseDTO<>();
+        HttpStatus httpStatus;
+
+        try {
+            List<CardHolderDTO> cardHolderDTOList = this.stripeService.getAllCardHolders();
+
+            response.setResult(cardHolderDTOList);
             response.setStatus(AppsConstants.ResponseStatus.SUCCESS);
             httpStatus = HttpStatus.OK;
 

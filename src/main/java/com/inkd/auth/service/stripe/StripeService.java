@@ -6,6 +6,8 @@ import com.inkd.auth.model.dto.stripe.*;
 import com.stripe.exception.StripeException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface StripeService {
 
@@ -22,4 +24,12 @@ public interface StripeService {
     SubscriptionDTO updateSubscription(SubscriptionUpdateRQ updateRQ) throws StripeException, AppsException;
 
     SubscriptionDTO cancelSubscription(SubscriptionCancelRQ cancelRQ) throws StripeException, AppsException;
+
+    CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException;
+
+    CardHolderDTO createCardHolder(CardHolderCreateRQ createRQ) throws StripeException, AppsException;
+
+    CardHolderDTO retrieveCardHolder(String cardHolderID) throws StripeException, AppsException;
+
+    List<CardHolderDTO> getAllCardHolders() throws StripeException, AppsException;
 }

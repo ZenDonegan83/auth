@@ -10,6 +10,9 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
 import com.stripe.model.Subscription;
+import com.stripe.model.issuing.Card;
+import com.stripe.model.issuing.Cardholder;
+import com.stripe.model.issuing.CardholderCollection;
 import com.stripe.param.CustomerListParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -147,6 +150,7 @@ public class StripeServiceImpl implements StripeService {
         Subscription updatedSubscription = subscription.update(params);
 
         SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+        subscriptionDTO.setId(updatedSubscription.getId());
 
         return subscriptionDTO;
     }
@@ -161,5 +165,105 @@ public class StripeServiceImpl implements StripeService {
         subscriptionDTO.setId(deletedSubscription.getId());
 
         return subscriptionDTO;
+    }
+
+    @Override
+    public CardDTO createCard(CardCreateRQ createRQ) throws StripeException, AppsException {
+
+        this.setAPIKey();
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("cardholder", createRQ.getStripeCardHolder());
+        params.put("currency", "eur");
+        params.put("type", "virtual");
+
+        Card card = Card.create(params);
+
+        CardDTO cardDTO = new CardDTO();
+
+        cardDTO.setStripeCardID(card.getId());
+        cardDTO.setCurrency(card.getCurrency());
+        cardDTO.setType(card.getType());
+
+        return cardDTO;
+    }
+
+    @Override
+    public CardHolderDTO createCardHolder(CardHolderCreateRQ createRQ) throws StripeException, AppsException {
+        this.setAPIKey();
+
+        Map<String, Object> address = new HashMap<>();
+        address.put("line1", createRQ.getAddress().getLine1());
+        address.put("city", createRQ.getAddress().getCity());
+        address.put("state", createRQ.getAddress().getState());
+        address.put("country", createRQ.getAddress().getCountry());
+        address.put("postal_code", createRQ.getAddress().getPostalCode());
+
+        Map<String, Object> billing = new HashMap<>();
+        billing.put("address", address);
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("type", createRQ.getType());
+        params.put("name", createRQ.getName());
+        params.put("email", createRQ.getEmail());
+        params.put("phone_number", createRQ.getPhoneNumber());
+        params.put("billing", billing);
+
+        Cardholder cardholder = Cardholder.create(params);
+
+        CardHolderDTO cardHolderDTO = new CardHolderDTO();
+
+        cardHolderDTO.setCardHolderStripeID(cardholder.getId());
+        cardHolderDTO.setEmail(cardholder.getEmail());
+        cardHolderDTO.setType(cardholder.getType());
+        cardHolderDTO.setStatus(cardholder.getStatus());
+        cardHolderDTO.setName(cardholder.getName());
+
+        return cardHolderDTO;
+    }
+
+    @Override
+    public CardHolderDTO retrieveCardHolder(String cardHolderID) throws StripeException, AppsException {
+        this.setAPIKey();
+
+        Cardholder cardholder = Cardholder.retrieve(cardHolderID);
+
+        CardHolderDTO cardHolderDTO = new CardHolderDTO();
+
+        cardHolderDTO.setCardHolderStripeID(cardholder.getId());
+        cardHolderDTO.setName(cardholder.getName());
+        cardHolderDTO.setType(cardholder.getType());
+        cardHolderDTO.setStatus(cardholder.getStatus());
+        cardHolderDTO.setEmail(cardholder.getEmail());
+
+        return cardHolderDTO;
+    }
+
+    @Override
+    public List<CardHolderDTO> getAllCardHolders() throws StripeException, AppsException {
+        this.setAPIKey();
+
+        List<CardHolderDTO> cardHolderDTOList = new ArrayList<>();
+
+        Map<String, Object> params = new HashMap<>();
+        CardholderCollection cardholders = Cardholder.list(params);
+
+        List<Cardholder> cardholderList = cardholders.getData();
+
+        for (Cardholder cardholder : cardholderList) {
+            CardHolderDTO cardHolderDTO = new CardHolderDTO();
+
+            cardHolderDTO.setCardHolderStripeID(cardholder.getId());
+            cardHolderDTO.setName(cardholder.getName());
+            cardHolderDTO.setType(cardholder.getType());
+            cardHolderDTO.setStatus(cardholder.getStatus());
+            cardHolderDTO.setEmail(cardholder.getEmail());
+
+            cardHolderDTOList.add(cardHolderDTO);
+        }
+
+        return cardHolderDTOList;
     }
 }
