@@ -21,4 +21,9 @@ public interface CustomerService {
     boolean existsById(Long customerID) throws AppsException;
 
     Customer findCustomerByID(Long customerID) throws AppsException;
+
+    CustomerDTO updateStripeID(CustomerDTO customerDTO) throws AppsException;
+
+    Customer findByStripeID(String stripeID) throws AppsException;
+
 }

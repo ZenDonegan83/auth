@@ -11,3 +11,9 @@ https://www.socketlabs.com/docs/
 
 ##DocuSign
 https://developers.docusign.com/platform/auth/authcode/authcode-get-token/
+
+###Stripe API Integration
+https://dashboard.stripe.com/test/apikeys
+https://stripe.com/docs/api
+https://stripe.com/docs/videos/developer-foundations?video=authentication
+https://www.section.io/engineering-education/stripe-springboot/

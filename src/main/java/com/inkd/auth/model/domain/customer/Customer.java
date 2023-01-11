@@ -17,6 +17,9 @@ public class Customer {
     @Column(name = "CUSTOMER_ID")
     private Long customerID;
 
+    @Column(name = "STRIPE_ID", unique = true)
+    private String stripeID;
+
     @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
 
@@ -45,6 +48,14 @@ public class Customer {
 
     public void setCustomerID(Long customerID) {
         this.customerID = customerID;
+    }
+
+    public String getStripeID() {
+        return stripeID;
+    }
+
+    public void setStripeID(String stripeID) {
+        this.stripeID = stripeID;
     }
 
     public String getFirstName() {
